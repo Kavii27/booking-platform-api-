@@ -10,6 +10,7 @@ import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingStatusDto } from './dto/update-booking-status.dto';
 import { BookingStatus } from './enums/booking-status.enum';
 import { ServicesService } from '../services/services.service';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @Injectable()
 export class BookingsService {
@@ -35,8 +36,23 @@ export class BookingsService {
     return this.bookingsRepository.save(booking);
   }
 
-  findAll(): Promise<Booking[]> {
-    return this.bookingsRepository.find();
+  async findAll(query: PaginationQueryDto) {
+    const { page = 1, limit = 10 } = query;
+    const [data, total] = await this.bookingsRepository.findAndCount({
+      skip: (page - 1) * limit,
+      take: limit,
+      order: { createdAt: 'DESC' },
+    });
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
   async findOne(id: string): Promise<Booking> {

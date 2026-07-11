@@ -13,6 +13,8 @@ import { BookingsService } from './bookings.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingStatusDto } from './dto/update-booking-status.dto';
 import { JwtAuthGuard } from '../common/gaurds/jwt-auth.guard';
+import { Query } from '@nestjs/common';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @Controller('bookings')
 export class BookingsController {
@@ -27,8 +29,8 @@ export class BookingsController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
-    return this.bookingsService.findAll();
+  findAll(@Query() query: PaginationQueryDto) {
+    return this.bookingsService.findAll(query);
   }
 
   @UseGuards(JwtAuthGuard)
