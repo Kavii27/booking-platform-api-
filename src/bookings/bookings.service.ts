@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  ConflictException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -30,6 +31,20 @@ export class BookingsService {
     const bookingDate = new Date(dto.bookingDate);
     if (bookingDate < today) {
       throw new BadRequestException('Booking date cannot be in the past');
+    }
+
+    // Bonus rule: prevent duplicate bookings for same service, date, and time
+    const existing = await this.bookingsRepository.findOne({
+      where: {
+        serviceId: dto.serviceId,
+        bookingDate: dto.bookingDate,
+        bookingTime: dto.bookingTime,
+      },
+    });
+    if (existing) {
+      throw new ConflictException(
+        'A booking already exists for this service at the selected date and time',
+      );
     }
 
     const booking = this.bookingsRepository.create(dto);
