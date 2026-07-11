@@ -3,17 +3,17 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeor
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ unique: true })
-  email: string;
+  email!: string;
 
   @Column()
-  password: string;
+  password!: string;
 
   @Column({ nullable: true })
-  name: string;
+  name!: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 }
