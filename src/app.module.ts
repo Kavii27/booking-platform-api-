@@ -21,7 +21,8 @@ import { BookingsModule } from './bookings/bookings.module';
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       autoLoadEntities: true,
-      synchronize: true, // set false 
+      synchronize: false, // set false 
+      migrations: ['dist/migrations/*.js'],
     }),
     UsersModule,
     AuthModule,
