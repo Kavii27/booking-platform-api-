@@ -47,7 +47,7 @@ This API allows authenticated users (staff/admins) to manage services (create, u
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/booking-platform-api.git
+git clone https://github.com/Kavii27/booking-platform-api-.git
 cd booking-platform-api
 
 # Install dependencies
