@@ -1,5 +1,6 @@
-import { IsOptional, IsInt, Min, Max } from 'class-validator';
+import { IsOptional, IsInt, Min, Max, IsString, IsEnum } from 'class-validator';
 import { Type } from 'class-transformer';
+import { BookingStatus } from '../../bookings/enums/booking-status.enum';
 
 export class PaginationQueryDto {
   @IsOptional()
@@ -14,4 +15,12 @@ export class PaginationQueryDto {
   @Min(1)
   @Max(100)
   limit?: number = 10;
+
+  @IsOptional()
+  @IsString()
+  search?: string; // matches customerName or customerEmail
+
+  @IsOptional()
+  @IsEnum(BookingStatus)
+  status?: BookingStatus;
 }

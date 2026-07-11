@@ -37,12 +37,26 @@ export class BookingsService {
   }
 
   async findAll(query: PaginationQueryDto) {
-    const { page = 1, limit = 10 } = query;
-    const [data, total] = await this.bookingsRepository.findAndCount({
-      skip: (page - 1) * limit,
-      take: limit,
-      order: { createdAt: 'DESC' },
-    });
+    const { page = 1, limit = 10, search, status } = query;
+
+    const qb = this.bookingsRepository.createQueryBuilder('booking');
+
+    if (search) {
+      qb.andWhere(
+        '(booking.customerName ILIKE :search OR booking.customerEmail ILIKE :search)',
+        { search: `%${search}%` },
+      );
+    }
+
+    if (status) {
+      qb.andWhere('booking.status = :status', { status });
+    }
+
+    qb.orderBy('booking.createdAt', 'DESC')
+      .skip((page - 1) * limit)
+      .take(limit);
+
+    const [data, total] = await qb.getManyAndCount();
 
     return {
       data,
